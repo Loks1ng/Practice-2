@@ -17,13 +17,13 @@ int main() {
     
     // Создание сокета
     if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
-        perror("socket failed");
+        perror("Ошибка создания сокета");
         exit(EXIT_FAILURE);
     }
     
     // Настройка сокета
     if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt))) {
-        perror("setsockopt");
+        perror("Ошибка настройки сокета");
         exit(EXIT_FAILURE);
     }
     
@@ -33,29 +33,30 @@ int main() {
     
     // Привязка сокета к порту
     if (bind(server_fd, (struct sockaddr *)&address, sizeof(address)) < 0) {
-        perror("bind failed");
+        perror("Ошибка привязки сокета");
         exit(EXIT_FAILURE);
     }
     
     // Ожидание подключений
     if (listen(server_fd, 3) < 0) {
-        perror("listen");
+        perror("Ошибка ожидания подключений");
         exit(EXIT_FAILURE);
     }
     
-    printf("Server listening on port %d...\n", PORT);
+    printf("Сервер ожидает подключений на порту %d...\n", PORT);
     
     // Принятие подключения
     if ((new_socket = accept(server_fd, (struct sockaddr *)&address, (socklen_t*)&addrlen)) < 0) {
-        perror("accept");
+        perror("Ошибка принятия подключения");
         exit(EXIT_FAILURE);
     }
     
     // Чтение данных от клиента
     read(new_socket, buffer, BUFFER_SIZE);
-    printf("Received student info: %s\n", buffer);
+    printf("Получена информация о студенте: %s\n", buffer);
     
     close(new_socket);
     close(server_fd);
+    printf("Сервер завершил работу\n");
     return 0;
 }
